@@ -1,0 +1,124 @@
+{
+  "$schema-template": "1.0.0",
+  "modulesContent": {
+    "$edgeAgent": {
+      "properties.desired": {
+        "schemaVersion": "1.0",
+        "runtime": {
+          "type": "docker",
+          "settings": {
+            "minDockerVersion": "v1.25",
+            "loggingOptions": "",
+            "registryCredentials": {
+              "xxx": {
+                "username": "<your username>",
+                "password": "<your password>",
+                "address": "<xxx>.azurecr.io"
+              }
+            }
+          }
+        },
+        "systemModules": {
+          "edgeAgent": {
+            "type": "docker",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-agent:1.0",
+              "createOptions": {}
+            }
+          },
+          "edgeHub": {
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-hub:1.0",
+              "createOptions": {
+                "HostConfig": {
+                  "PortBindings": {
+                    "5671/tcp": [
+                      {
+                        "HostPort": "5671"
+                      }
+                    ],
+                    "8883/tcp": [
+                      {
+                        "HostPort": "8883"
+                      }
+                    ],
+                    "443/tcp": [
+                      {
+                        "HostPort": "443"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "modules": {
+          "ConfigurationChangeHandlerModule": {
+            "version": "1.0.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULES.ConfigurationChangeHandlerModule}",
+              "createOptions": {
+                "HostConfig": {
+                  "Mounts": [
+                    {
+                      "Target": "/app/data/moduleConfig",
+                      "Source": "/etc/moduleConfig",
+                      "Type": "bind"
+                    }
+                  ]
+                }
+              }
+            },
+            "env": {
+              "CM_CONFIG_FILE_PATH": {
+                "value": "/app/data/moduleConfig/sampleConfig.json"
+              }
+            }
+          },
+          "ConfigurationConsumerModule": {
+            "version": "1.0.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULES.ConfigurationConsumerModule}",
+              "createOptions": {
+                "HostConfig": {
+                  "Mounts": [
+                    {
+                      "Target": "/app/data/moduleConfig",
+                      "Source": "/etc/moduleConfig",
+                      "Type": "bind"
+                    }
+                  ]
+                }
+              }
+            },
+            "env": {
+              "CM_CONFIG_FILE_PATH": {
+                "value": "/app/data/moduleConfig/sampleConfig.json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "$edgeHub": {
+      "properties.desired": {
+        "schemaVersion": "1.0",
+        "routes": {
+        },
+        "storeAndForwardConfiguration": {
+          "timeToLiveSecs": 7200
+        }
+      }
+    }
+  }
+}
