@@ -5,10 +5,7 @@ In this sample I would show how to create an IoT Edge Module that will listen
 for a Direct Method call and save the content of the DM call into a file
 (specified as Environment Variable).
 
-That file reside into a bounded folder and the same folder is shared with
-another Module that will read the same configuration file.
-
-This situation is useful when you have a docker container for which you do not
+This approach is useful when you have to rely on a container for which you do not
 control the source code (or for which you do not want to change the code) that
 expect a configuration file (in this example in JSON format but you can quite
 easily change the code in order to deploy free text as soon as it is provided as
@@ -68,4 +65,8 @@ the configuration:
 Disclaimer
 ----------
 
-This sample is provided as it is.
+This sample is provided as it is. It is not intended as production grade code.  
+Feel free to take this code and change for your own specific use case and do not forget to send me a feedback 
+at 
+
+algorni@microsoft.com or here in git hub!
